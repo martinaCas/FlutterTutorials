@@ -167,8 +167,8 @@ Widget build(BuildContext context) {
 	    @override
 	    Widget build(BuildContext context) {
 	      return MaterialApp(
-	-       title: 'Welcome to Flutter',
-	+       title: 'Startup Name Generator',
+	/*-*/      title: 'Welcome to Flutter',
+	/*+*/      title: 'Startup Name Generator',
 	        home: Scaffold(
 	          appBar: AppBar(
 	-           title: const Text('Welcome to Flutter'),
