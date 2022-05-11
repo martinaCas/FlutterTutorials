@@ -73,28 +73,25 @@ The IDE also automatically updates the state class to extend *State<RandomWords>
 
 Then update the *build()* method in *_RandomWordsState*:
 ```
-**class _RandomWordsState extends State<RandomWords> {**
-    **@override**
-    **Widget build(BuildContext context) {**
-     **final wordPair = WordPair.random();**
-      **return Text(wordPair.asPascalCase);**
-    **}**
-  **}**
+class _RandomWordsState extends State<RandomWords> {
+    @override
+    Widget build(BuildContext context) {
+     final wordPair = WordPair.random();
+      return Text(wordPair.asPascalCase);
+    }
+  }
 ```
   Remove the word generation code from MyApp by making the changes shown in the following diff:
 ```
         @override
 	    Widget build(BuildContext context) {
-	-     final wordPair = WordPair.random();
+	     final wordPair = WordPair.random();//remove
 
-            ........
+	         body: Center(//remove
+	           child: Text(wordPair.asPascalCase),//remove
+	         body: const Center(//add
+    	           child: RandomWords(),//add
 
-	-         body: Center(
-	-           child: Text(wordPair.asPascalCase),
-	+         body: const Center(
-    +           child: RandomWords(),
-
-            .........
 ```
 ## STEP4: Create an infinite scrolling ListView
 In this step, you’ll expand *_RandomWordsState* to generate and display a list of word pairings. As the user scrolls the list (displayed in a *ListView* widget) grows infinitely. *ListView*’s builder factory constructor allows you to build a list view lazily, on demand.
@@ -164,7 +161,7 @@ Widget build(BuildContext context) {
     },
   );
 }
-	```
+```
 
 5. To put it all together, update the displayed title of the app by updating the build() method in the MyApp class and changing the title of the AppBar:
 ```
