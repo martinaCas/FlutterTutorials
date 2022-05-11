@@ -142,6 +142,7 @@ A ListTile is a fixed height row that contains text as well as leading or traili
 4. Once complete, the build() method in the _RandomWordsState class should match the following highlighted code:
 
 @override
+
 Widget build(BuildContext context) {
   return ListView.builder(
     padding: const EdgeInsets.all(16.0),
@@ -174,7 +175,7 @@ Widget build(BuildContext context) {
 	           title: const Text('Welcome to Flutter'),//removed
 	           title: const Text('Startup Name         Generator'),//added
             //code non variato
-            
+
 	    class _RandomWordsState extends State<RandomWords> {
 	        final _suggestions = <WordPair>[];//added
 	        final _biggerFont = const TextStyle(fontSize: 18);//added
