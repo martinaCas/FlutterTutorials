@@ -174,9 +174,10 @@ Widget build(BuildContext context) {
 	           title: const Text('Welcome to Flutter'),//removed
 	           title: const Text('Startup Name         Generator'),//added
             //code non variato
-	  class _RandomWordsState extends State<RandomWords> {
-	   final _suggestions = <WordPair>[];//added
-	   final _biggerFont = const TextStyle(fontSize: 18);//added
+            
+	    class _RandomWordsState extends State<RandomWords> {
+	        final _suggestions = <WordPair>[];//added
+	        final _biggerFont = const TextStyle(fontSize: 18);//added
 	 
 	    @override
 	    Widget build(BuildContext context) {
