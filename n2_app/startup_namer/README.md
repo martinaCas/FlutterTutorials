@@ -173,7 +173,7 @@ Widget build(BuildContext context) {
 	          appBar: AppBar(
 	           title: const Text('Welcome to Flutter'),//removed
 	           title: const Text('Startup Name         Generator'),//added
-            .................
+            //code non variato
 	  class _RandomWordsState extends State<RandomWords> {
 	   final _suggestions = <WordPair>[];//added
 	   final _biggerFont = const TextStyle(fontSize: 18);//added
@@ -199,4 +199,4 @@ Widget build(BuildContext context) {
 	       },
 	     );
 	    }
-                .................
+                //code non variato
