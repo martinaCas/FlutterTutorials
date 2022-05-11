@@ -44,13 +44,13 @@ Performing Pub get also auto-generates the pubspec.lock file with a list of all 
 
 Then in lib/main.dart, import the new package:
 ```
-**import 'package:english_words/english_words.dart';**
+import 'package:english_words/english_words.dart';
 ```
 Use the English words package to generate the text instead of using the string “Hello World”:
 ```
-++ **final wordPair = WordPair.random();**
-++ **body: Center(**
-      **child: Text(wordPair.asPascalCase),**
+ final wordPair = WordPair.random();
+ body: Center(
+      child: Text(wordPair.asPascalCase),
 ```
 ## Note: “Pascal case” (also known as “upper camel case”), means that each word in the string, including the first one, begins with an uppercase letter. So, “uppercamelcase” becomes “UpperCamelCase”.
 
@@ -202,4 +202,4 @@ Widget build(BuildContext context) {
 	     );
 	    }
                 //code non variato
-	```
+```
