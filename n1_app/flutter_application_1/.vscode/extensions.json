@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "dart-code.dart-code",
+        "icrawl.discord-vscode",
+        "dart-code.flutter",
+        "github.codespaces",
+        "github.vscode-pull-request-github",
+        "eamodio.gitlens",
+        "visualstudioexptteam.vscodeintellicode",
+        "christian-kohler.path-intellisense",
+        "BeppeTemp.tempest-theme"
+    ]
+}
