@@ -167,36 +167,36 @@ Widget build(BuildContext context) {
 	    @override
 	    Widget build(BuildContext context) {
 	      return MaterialApp(
-	/*-*/      title: 'Welcome to Flutter',
-	/*+*/      title: 'Startup Name Generator',
+	      title: 'Welcome to Flutter',//removed
+	     title: 'Startup Name Generator',//added
 	        home: Scaffold(
 	          appBar: AppBar(
-	-           title: const Text('Welcome to Flutter'),
-	+           title: const Text('Startup Name         Generator'),
+	           title: const Text('Welcome to Flutter'),//removed
+	           title: const Text('Startup Name         Generator'),//added
             .................
 	  class _RandomWordsState extends State<RandomWords> {
-	+   final _suggestions = <WordPair>[];
-	+   final _biggerFont = const TextStyle(fontSize: 18);
-	+ 
+	   final _suggestions = <WordPair>[];//added
+	   final _biggerFont = const TextStyle(fontSize: 18);//added
+	 
 	    @override
 	    Widget build(BuildContext context) {
-	-     final wordPair = WordPair.random();
-	-     return Text(wordPair.asPascalCase);
-	+     return ListView.builder(
-	+       padding: const EdgeInsets.all(16.0),
-	+       itemBuilder: /*1*/ (context, i) {
-	+         if (i.isOdd) return const Divider(); /*2*/
-	+ 
-	+         final index = i ~/ 2; /*3*/
-	+         if (index >= _suggestions.length) {
-	+           _suggestions.addAll(generateWordPairs().take(10)); /*4*/
-	+         }
-	+         return ListTile(
-	+           title: Text(
-	+             _suggestions[index].asPascalCase,
-	+             style: _biggerFont,
-	+           ),	+         );
-	+       },
-	+     );
+	     final wordPair = WordPair.random();//removed
+	     return Text(wordPair.asPascalCase);//removed
+	     return ListView.builder(//the follow lines are all added
+	       padding: const EdgeInsets.all(16.0),
+	       itemBuilder: /*1*/ (context, i) {
+	         if (i.isOdd) return const Divider(); /*2*/
+	 
+	         final index = i ~/ 2; /*3*/
+	         if (index >= _suggestions.length) {
+	           _suggestions.addAll(generateWordPairs().take(10)); /*4*/
+	         }
+	         return ListTile(
+	           title: Text(
+	             _suggestions[index].asPascalCase,
+	             style: _biggerFont,
+	           ),	+         );
+	       },
+	     );
 	    }
                 .................
