@@ -52,7 +52,7 @@ Use the English words package to generate the text instead of using the string �
  body: Center(
       child: Text(wordPair.asPascalCase),
 ```
-## Note: “Pascal case” (also known as “upper camel case”), means that each word in the string, including the first one, begins with an uppercase letter. So, “uppercamelcase” becomes “UpperCamelCase”.
+# Note: “Pascal case” (also known as “upper camel case”), means that each word in the string, including the first one, begins with an uppercase letter. So, “uppercamelcase” becomes “UpperCamelCase”.
 
 ## STEP 3: Add a Stateful widget
 Stateless widgets are immutable, meaning that their properties can’t change—all values are final.
