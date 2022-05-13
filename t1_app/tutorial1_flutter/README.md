@@ -29,3 +29,15 @@ appBar: AppBar(
 //other code
 ```
 
+**Step 1: Diagram the layout**
+
+The first step is to break the layout down to its basic elements:
+
+* Identify the rows and columns.
+* Does the layout include a grid?
+* Are there overlapping elements?
+* Does the UI need tabs?
+* Notice areas that require alignment, padding, or borders.
+First, identify the larger elements. In this example, four elements are arranged into a column: an image, two rows, and a block of text.
+
+image.png
