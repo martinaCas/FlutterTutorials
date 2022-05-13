@@ -41,4 +41,4 @@ The first step is to break the layout down to its basic elements:
 
 First, identify the larger elements. In this example, four elements are arranged into a column: an image, two rows, and a block of text.
 
-!image.png
+!https://docs.flutter.dev/assets/images/docs/ui/layout/lakes-column-elts.png
