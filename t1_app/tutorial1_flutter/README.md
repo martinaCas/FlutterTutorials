@@ -38,6 +38,7 @@ The first step is to break the layout down to its basic elements:
 * Are there overlapping elements?
 * Does the UI need tabs?
 * Notice areas that require alignment, padding, or borders.
+
 First, identify the larger elements. In this example, four elements are arranged into a column: an image, two rows, and a block of text.
 
-image.png
+!image.png
