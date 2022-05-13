@@ -50,3 +50,102 @@ If you’ve already built the app in the building layouts tutorial (step 6), ski
 Once you have a connected and enabled device, or you’ve launched the iOS simulator (part of the Flutter install) or the Android emulator (part of the Android Studio install), you are good to go!
 
 
+ **Step 1: Decide which object manages the widget's state**
+
+ A widget’s state can be managed in several ways, but in our example the widget itself, FavoriteWidget, will manage its own state. In this example, toggling the star is an isolated action that doesn’t affect the parent widget or the rest of the UI, so the widget can handle its state internally.
+
+**Step 2: Subclass StatefulWidget**
+
+The FavoriteWidget class manages its own state, so it overrides createState() to create a State object. The framework calls createState() when it wants to build the widget. In this example, createState() returns an instance of _FavoriteWidgetState, which you’ll implement in the next step.
+```
+class FavoriteWidget extends StatefulWidget {
+  const FavoriteWidget({Key? key}) : super(key: key);
+
+  @override
+  _FavoriteWidgetState createState() => _FavoriteWidgetState();
+}
+```
+#### Note: Members or classes that start with an underscore (_) are private.
+
+**Step 3: Subclass State**
+
+The _FavoriteWidgetState class stores the mutable data that can change over the lifetime of the widget. When the app first launches, the UI displays a solid red star, indicating that the lake has “favorite” status, along with 41 likes. These values are stored in the _isFavorited and _favoriteCount fields:
+```
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  bool _isFavorited = true;
+  int _favoriteCount = 41;
+
+  // ···
+}
+```
+
+The class also defines a build() method, which creates a row containing a red IconButton, and Text. You use IconButton (instead of Icon) because it has an onPressed property that defines the callback function (_toggleFavorite) for handling a tap. You’ll define the callback function next.
+
+```
+class _FavoriteWidgetState extends State<FavoriteWidget> {
+  // ···
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(0),
+          child: IconButton(
+            padding: const EdgeInsets.all(0),
+            alignment: Alignment.centerRight,
+            icon: (_isFavorited
+                ? const Icon(Icons.star)
+                : const Icon(Icons.star_border)),
+            color: Colors.red[500],
+            onPressed: _toggleFavorite,
+          ),
+        ),
+        SizedBox(
+          width: 18,
+          child: SizedBox(
+            child: Text('$_favoriteCount'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+
+#### Tip: Placing the Text in a SizedBox and setting its width prevents a discernible “jump” when the text changes between the values of 40 and 41 — a jump would otherwise occur because those values have different widths.
+
+The _toggleFavorite() method, which is called when the IconButton is pressed, calls setState(). Calling setState() is critical, because this tells the framework that the widget’s state has changed and that the widget should be redrawn. The function argument to setState() toggles the UI between these two states:
+
+* A star icon and the number 41
+* A star_border icon and the number 40
+
+```
+void _toggleFavorite() {
+  setState(() {
+    if (_isFavorited) {
+      _favoriteCount -= 1;
+      _isFavorited = false;
+    } else {
+      _favoriteCount += 1;
+      _isFavorited = true;
+    }
+  });
+}
+```
+
+**Step 4: Plug the stateful widget into the widget tree**
+
+Add your custom stateful widget to the widget tree in the app’s build() method. First, locate the code that creates the Icon and Text, and delete it. In the same location, create the stateful widget:
+
+```
+- Icon(
+    Icons.star,
+    color: Colors.red[500],
+    ),
+    const Text('41'),
++   const FavoriteWidget(),
+```
+
+That’s it! When you hot reload the app, the star icon should now respond to taps.
+
