@@ -607,4 +607,393 @@ class MyStatelessWidget extends StatelessWidget {
 ```
 For more click [here](https://api.flutter.dev/flutter/material/IconButton-class.html)
 
-Riprendere da Radio Button
+6. **RadioButton**
+
+A material design radio button.
+
+Used to select between a number of mutually exclusive values. When one radio button in a group is selected, the other radio buttons in the group cease to be selected. The values are of type T, the type parameter of the Radio class. Enums are commonly used for this purpose.
+
+The radio button itself does not maintain any state. Instead, selecting the radio invokes the onChanged callback, passing value as a parameter. If groupValue and value match, this radio will be selected. Most widgets will respond to onChanged by calling State.setState to update the radio button's groupValue.
+
+### Here is an example of Radio widgets wrapped in ListTiles, which is similar to what you could get with the RadioListTile widget.The currently selected character is passed into groupValue, which is maintained by the example's State. In this case, the first Radio will start off selected because _character is initialized to SingingCharacter.lafayette. If the second radio button is pressed, the example's state is updated with setState, updating _character to SingingCharacter.jefferson. This causes the buttons to rebuild with the updated groupValue, and therefore the selection of the second button. Requires one of its ancestors to be a Material widget.
+
+```
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  static const String _title = 'Flutter Code Sample';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: _title,
+      home: Scaffold(
+        appBar: AppBar(title: const Text(_title)),
+        body: const Center(
+          child: MyStatefulWidget(),
+        ),
+      ),
+    );
+  }
+}
+
+enum SingingCharacter { lafayette, jefferson }
+
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  SingingCharacter? _character = SingingCharacter.lafayette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          title: const Text('Lafayette'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.lafayette,
+            groupValue: _character,
+            onChanged: (SingingCharacter? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Thomas Jefferson'),
+          leading: Radio<SingingCharacter>(
+            value: SingingCharacter.jefferson,
+            groupValue: _character,
+            onChanged: (SingingCharacter? value) {
+              setState(() {
+                _character = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+```
+
+For more, click [here](https://api.flutter.dev/flutter/material/Radio-class.html)
+
+7. **ElevatedButton**
+
+A Material Design "elevated button".
+
+Use elevated buttons to add dimension to otherwise mostly flat layouts, e.g. in long busy lists of content, or in wide spaces. Avoid using elevated buttons on already-elevated content such as dialogs or cards.
+
+An elevated button is a label child displayed on a Material widget whose Material.elevation increases when the button is pressed. The label's Text and Icon widgets are displayed in style's ButtonStyle.foregroundColor and the button's filled background is the ButtonStyle.backgroundColor.
+
+The elevated button's default style is defined by defaultStyleOf. The style of this elevated button can be overridden with its style parameter. The style of all elevated buttons in a subtree can be overridden with the ElevatedButtonTheme, and the style of all of the elevated buttons in an app can be overridden with the Theme's ThemeData.elevatedButtonTheme property.
+
+The static styleFrom method is a convenient way to create a elevated button ButtonStyle from simple values.
+
+If onPressed and onLongPress callbacks are null, then the button will be disabled.
+
+```
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  static const String _title = 'Flutter Code Sample';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: _title,
+      home: Scaffold(
+        appBar: AppBar(title: const Text(_title)),
+        body: const MyStatefulWidget(),
+      ),
+    );
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final ButtonStyle style =
+        ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ElevatedButton(
+            style: style,
+            onPressed: null,
+            child: const Text('Disabled'),
+          ),
+          const SizedBox(height: 30),
+          ElevatedButton(
+            style: style,
+            onPressed: () {},
+            child: const Text('Enabled'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+```
+
+For more, click [here](https://api.flutter.dev/flutter/material/ElevatedButton-class.html)
+
+8. **Slider**
+
+A Material Design slider.
+
+Used to select from a range of values.
+
+```
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  static const String _title = 'Flutter Code Sample';
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: _title,
+      home: Scaffold(
+        appBar: AppBar(title: const Text(_title)),
+        body: const MyStatefulWidget(),
+      ),
+    );
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  double _currentSliderValue = 20;
+
+  @override
+  Widget build(BuildContext context) {
+    return Slider(
+      value: _currentSliderValue,
+      max: 100,
+      divisions: 5,
+      label: _currentSliderValue.round().toString(),
+      onChanged: (double value) {
+        setState(() {
+          _currentSliderValue = value;
+        });
+      },
+    );
+  }
+}
+
+```
+
+A slider can be used to select from either a continuous or a discrete set of values. The default is to use a continuous range of values from min to max. To use discrete values, use a non-null value for divisions, which indicates the number of discrete intervals. For example, if min is 0.0 and max is 50.0 and divisions is 5, then the slider can take on the discrete values 0.0, 10.0, 20.0, 30.0, 40.0, and 50.0.
+
+The terms for the parts of a slider are:
+
+The "thumb", which is a shape that slides horizontally when the user drags it.
+The "track", which is the line that the slider thumb slides along.
+The "value indicator", which is a shape that pops up when the user is dragging the thumb to indicate the value being selected.
+The "active" side of the slider is the side between the thumb and the minimum value.
+The "inactive" side of the slider is the side between the thumb and the maximum value.
+The slider will be disabled if onChanged is null or if the range given by min..max is empty (i.e. if min is equal to max).
+
+The slider widget itself does not maintain any state. Instead, when the state of the slider changes, the widget calls the onChanged callback. Most widgets that use a slider will listen for the onChanged callback and rebuild the slider with a new value to update the visual appearance of the slider. To know when the value starts to change, or when it is done changing, set the optional callbacks onChangeStart and/or onChangeEnd.
+
+By default, a slider will be as wide as possible, centered vertically. When given unbounded constraints, it will attempt to make the track 144 pixels wide (with margins on each side) and will shrink-wrap vertically.
+
+Requires one of its ancestors to be a Material widget.
+
+Requires one of its ancestors to be a MediaQuery widget. Typically, these are introduced by the MaterialApp or WidgetsApp widget at the top of your application widget tree.
+
+To determine how it should be displayed (e.g. colors, thumb shape, etc.), a slider uses the SliderThemeData available from either a SliderTheme widget or the ThemeData.sliderTheme a Theme widget above it in the widget tree. You can also override some of the colors with the activeColor and inactiveColor properties, although more fine-grained control of the look is achieved using a SliderThemeData.
+
+For more, click [here](https://api.flutter.dev/flutter/material/Slider-class.html)
+
+9. **Switch**
+
+A material design switch.
+
+Used to toggle the on/off state of a single setting.
+
+The switch itself does not maintain any state. Instead, when the state of the switch changes, the widget calls the onChanged callback. Most widgets that use a switch will listen for the onChanged callback and rebuild the switch with a new value to update the visual appearance of the switch.
+
+If the onChanged callback is null, then the switch will be disabled (it will not respond to input). A disabled switch's thumb and track are rendered in shades of grey by default. The default appearance of a disabled switch can be overridden with inactiveThumbColor and inactiveTrackColor.
+
+Requires one of its ancestors to be a Material widget.
+
+For more, click [here](https://api.flutter.dev/flutter/material/Switch-class.html)
+
+10. **TextField**
+
+A material design text field.
+
+A text field lets the user enter text, either with hardware keyboard or with an onscreen keyboard.
+
+The text field calls the onChanged callback whenever the user changes the text in the field. If the user indicates that they are done typing in the field (e.g., by pressing a button on the soft keyboard), the text field calls the onSubmitted callback.
+
+To control the text that is displayed in the text field, use the controller. For example, to set the initial value of the text field, use a controller that already contains some text. The controller can also control the selection and composing region (and to observe changes to the text, selection, and composing region).
+
+By default, a text field has a decoration that draws a divider below the text field. You can use the decoration property to control the decoration, for example by adding a label or an icon. If you set the decoration property to null, the decoration will be removed entirely, including the extra padding introduced by the decoration to save space for the labels.
+
+If decoration is non-null (which is the default), the text field requires one of its ancestors to be a Material widget.
+
+To integrate the TextField into a Form with other FormField widgets, consider using TextFormField.
+
+When the widget has focus, it will prevent itself from disposing via its underlying EditableText's AutomaticKeepAliveClientMixin.wantKeepAlive in order to avoid losing the selection. Removing the focus will allow it to be disposed.
+
+Remember to call TextEditingController.dispose of the TextEditingController when it is no longer needed. This will ensure we discard any resources used by the object.
+
+### This example shows how to create a TextField that will obscure input. The InputDecoration surrounds the field in a border using OutlineInputBorder and adds a label.
+
+```
+const TextField(
+  obscureText: true,
+  decoration: InputDecoration(
+    border: OutlineInputBorder(),
+    labelText: 'Password',
+  ),
+)
+```
+
+## Reading values
+
+A common way to read a value from a TextField is to use the onSubmitted callback. This callback is applied to the text field's current value when the user finishes editing.
+
+```
+import 'package:flutter/material.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  static const String _title = 'Flutter Code Sample';
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      title: _title,
+      home: MyStatefulWidget(),
+    );
+  }
+}
+
+class MyStatefulWidget extends StatefulWidget {
+  const MyStatefulWidget({Key? key}) : super(key: key);
+
+  @override
+  State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
+}
+
+class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: TextField(
+          controller: _controller,
+          onSubmitted: (String value) async {
+            await showDialog<void>(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Thanks!'),
+                  content: Text(
+                      'You typed "$value", which has length ${value.characters.length}.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+```
+
+### Lifecycle
+
+Upon completion of editing, like pressing the "done" button on the keyboard, two actions take place:
+
+1st: Editing is finalized. The default behavior of this step includes an invocation of onChanged. That default behavior can be overridden. See onEditingComplete for details.
+
+2nd: onSubmitted is invoked with the user's input value.
+
+onSubmitted can be used to manually move focus to another input widget when a user finishes with the currently focused input widget.
+
+When the widget has focus, it will prevent itself from disposing via AutomaticKeepAliveClientMixin.wantKeepAlive in order to avoid losing the selection. Removing the focus will allow it to be disposed.
+
+For most applications the onSubmitted callback will be sufficient for reacting to user input.
+
+The onEditingComplete callback also runs when the user finishes editing. It's different from onSubmitted because it has a default value which updates the text controller and yields the keyboard focus. Applications that require different behavior can override the default onEditingComplete callback.
+
+Keep in mind you can also always read the current string from a TextField's TextEditingController using TextEditingController.text.
+
+### Handling emojis and other complex characters
+
+It's important to always use characters when dealing with user input text that may contain complex characters. This will ensure that extended grapheme clusters and surrogate pairs are treated as single characters, as they appear to the user.
+
+For example, when finding the length of some user input, use string.characters.length. Do NOT use string.length or even string.runes.length. For the complex character "👨‍👩‍👦", this appears to the user as a single character, and string.characters.length intuitively returns 1. On the other hand, string.length returns 8, and string.runes.length returns 5!
+
+In the live Dartpad example above, try typing the emoji 👨‍👩‍👦 into the field and submitting. Because the example code measures the length with value.characters.length, the emoji is correctly counted as a single character.
+
+For more, click [here](https://api.flutter.dev/flutter/material/TextField-class.html)
+
+
