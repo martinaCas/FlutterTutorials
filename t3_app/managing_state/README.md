@@ -47,7 +47,7 @@ The _TapboxAState class:
 * Defines the _handleTap() function, which updates _active when the box is tapped and calls the setState() function to update the UI.
 * Implements all interactive behavior for the widget.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 // TapboxA manages its own state.
@@ -130,7 +130,7 @@ The TapboxB class:
 * Extends StatelessWidget because all state is handled by its parent.
 * When a tap is detected, it notifies the parent.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 // ParentWidget manages the state for TapboxB.
@@ -221,7 +221,7 @@ The _TapboxCState object:
 * Calls setState() to update the UI on tap down, tap up, or tap cancel, and the _highlight state changes.
 * On a tap event, passes that state change to the parent widget to take appropriate action using the widget property.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 //---------------------------- ParentWidget ----------------------------
