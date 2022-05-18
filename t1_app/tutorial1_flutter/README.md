@@ -20,7 +20,7 @@ samples, guidance on mobile development, and a full API reference.
 
 Create a basic Flutter app. Change the app bar title and the app title as follow:
 
-```
+```c++
 title: 'Flutter layout demo',
 //other code
 appBar: AppBar(
@@ -44,7 +44,7 @@ First, identify the larger elements. In this example, four elements are arranged
 **Step 2: Implement the title row**
 
 First, you'll build the left column in the title section. Add the following code at the top of the build() method of the MyApp class:
-```
+```c++
 Widget titleSection = Container(
   padding: const EdgeInsets.all(32),
   child: Row(
@@ -88,7 +88,7 @@ Widget titleSection = Container(
 /*2*/ Putting the first row of text inside a Container enables you to add padding. The second child in the Column, also text, displays as grey.
 /*3*/ The last two items in the title row are a star icon, painted red, and the text “41”. The entire row is in a Container and padded along each edge by 32 pixels. Add the title section to the app body like this:
 
-```
+```c++
 //code
 body: Column(
     children[
@@ -103,7 +103,7 @@ The button section contains 3 columns that use the same layout—an icon over a 
 
 Since the code for building each column is almost identical, create a private helper method named buildButtonColumn(), which takes a color, an Icon and Text, and returns a column with its widgets painted in the given color.
 
-```
+```c++
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -139,7 +139,7 @@ The function adds the icon directly to the column. The text is inside a Containe
 
 Build the row containing these columns by calling the function and passing the color, Icon, and text specific to that column. Align the columns along the main axis using MainAxisAlignment.spaceEvenly to arrange the free space evenly before, between, and after each column. Add the following code just below the titleSection declaration inside the build() method:
 
-```
+```c++
 Color color = Theme.of(context).primaryColor;
 
 Widget buttonSection = Row(
@@ -154,7 +154,7 @@ Widget buttonSection = Row(
 
 Add the button section to the body:
 
-```
+```c++
 body: Column(
     children: [
         titleSection,
@@ -166,7 +166,7 @@ body: Column(
 **Step 4: Implement the text section**
 
 Define the text section as a variable. Put the text in a Container and add padding along each edge. Add the following code just below the buttonSection declaration:
-```
+```c++
 Widget textSection = const Padding(
   padding: EdgeInsets.all(32),
   child: Text(
@@ -184,7 +184,7 @@ Widget textSection = const Padding(
 By setting softwrap to true, text lines will fill the column width before wrapping at a word boundary.
 
 Add the text section of the body:
-```
+```c++
 body: Column(
     children: [
         titleSection,
@@ -202,7 +202,7 @@ Three of the four column elements are now complete, leaving only the image. Add 
 * Add lake.jpg.
 * Update the pubspec.yaml file to include an assets tag. This makes the image available to your code.
 
-```
+```c++
 flutter:
     user-material-design: true
     assets:
@@ -211,7 +211,7 @@ flutter:
 
 Now you can reference the image from your code:
 
-```
+```c++
 body: Column(
     children: [
         Image.asset(
@@ -230,7 +230,7 @@ BoxFit.cover tells the framework that the image should be as small as possible b
 **Step 6: Final touch**
 In this final step, arrange all of the elements in a ListView, rather than a Column, because a ListView supports app body scrolling when the app is run on a small device.
 
-```
+```c++
 - body: Column(
 + body: ListView(
     ...
