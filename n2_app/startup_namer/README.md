@@ -43,11 +43,11 @@ While viewing the pubspec.yaml file in Android Studio’s editor view, click Pub
 Performing Pub get also auto-generates the pubspec.lock file with a list of all packages pulled into the project and their version numbers.
 
 Then in lib/main.dart, import the new package:
-```
+```c++
 import 'package:english_words/english_words.dart';
 ```
 Use the English words package to generate the text instead of using the string “Hello World”:
-```
+```c++
  final wordPair = WordPair.random();
  body: Center(
       child: Text(wordPair.asPascalCase),
@@ -72,7 +72,7 @@ Once you’ve entered *RandomWords* as the name of the stateful widget, the IDE 
 The IDE also automatically updates the state class to extend *State<RandomWords>*, indicating that you’re using a generic *State* class specialized for use with *RandomWords*. Most of the app’s logic resides here—it maintains the state for the *RandomWords* widget. This class saves the list of generated word pairs, which grows infinitely as the user scrolls and, in part 2 of this lab, favorites word pairs as the user adds or removes them from the list by toggling the heart icon.
 
 Then update the *build()* method in *_RandomWordsState*:
-```
+```c++
 class _RandomWordsState extends State<RandomWords> {
     @override
     Widget build(BuildContext context) {
@@ -82,7 +82,7 @@ class _RandomWordsState extends State<RandomWords> {
   }
 ```
   Remove the word generation code from MyApp by making the changes shown in the following diff:
-```
+```c++
         @override
 	    Widget build(BuildContext context) {
 	     final wordPair = WordPair.random();//remove
@@ -97,7 +97,7 @@ class _RandomWordsState extends State<RandomWords> {
 In this step, you’ll expand *_RandomWordsState* to generate and display a list of word pairings. As the user scrolls the list (displayed in a *ListView* widget) grows infinitely. *ListView*’s builder factory constructor allows you to build a list view lazily, on demand.
 
 1. Add a *_suggestions* list to the *_RandomWordsState* class for saving suggested word pairings. Also, add a *_biggerFont* variable for making the font size larger.
-```
+```c++
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
   final _biggerFont = const TextStyle(fontSize: 18);
@@ -109,7 +109,7 @@ Next, you’ll add a *ListView* widget to the *_RandomWordsState* class with the
 The *ListView* class provides a builder property, *itemBuilder*, that’s a factory builder and callback function specified as an anonymous function. Two parameters are passed to the function—the *BuildContext*, and the row iterator, i. The iterator begins at 0 and increments each time the function is called. It increments twice for every suggested word pairing: once for the ListTile, and once for the Divider. This model allows the suggested list to continue growing as the user scrolls.
 
 2. Return a *ListView* widget from the build method of the *_RandomWordsState* class using the *ListView.builder* constructor:
-```
+```c++
 return ListView.builder(
   padding: const EdgeInsets.all(16.0),
   itemBuilder: /*1*/ (context, i) {
@@ -132,7 +132,7 @@ return ListView.builder(
 The ListView.builder constructor creates and displays a Text widget once per word pairing. In the next step, you’ll instead return each new pair as a ListTile, which allows you to make the rows more attractive in the next step.
 
 3. Replace the returned Text in the itemBuilder body of the ListView.builder in _RandomWordsState with a ListTile displaying the suggestion:
-```
+```c++
 return ListTile(
   title: Text(
     _suggestions[index].asPascalCase,
@@ -143,7 +143,7 @@ return ListTile(
 A ListTile is a fixed height row that contains text as well as leading or trailing icons or other widgets.
 
 4. Once complete, the build() method in the _RandomWordsState class should match the following highlighted code:
-```
+```c++
 @override
 Widget build(BuildContext context) {
   return ListView.builder(
@@ -167,7 +167,7 @@ Widget build(BuildContext context) {
 ```
 
 5. To put it all together, update the displayed title of the app by updating the build() method in the MyApp class and changing the title of the AppBar:
-```
+```c++
 	    @override
 	    Widget build(BuildContext context) {
 	      return MaterialApp(
