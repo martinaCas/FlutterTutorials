@@ -166,26 +166,168 @@ class _LogoAppState extends State<LogoApp> {
 
 The following shows the same code modified to animate the logo to grow from nothing to full size. When defining an AnimationController, you must pass in a vsync object. The vsync parameter is described in the AnimationController section.
 
-The changes from the non-animated example are highlighted:
+The changes from the non-animated example are highlighted: (main.dart updated)
 
 ```
-- class _LogoAppState extends State<LogoApp> {
-	+ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
-	+   late Animation<double> animation;
-	+   late AnimationController controller;
-	+ 
-	+   @override
-	+   void initState() {
-	+     super.initState();
-	+     controller =
-	+         AnimationController(duration: const Duration(seconds: 2), vsync: this);
-	+     animation = Tween<double>(begin: 0, end: 300).animate(controller)
-	+       ..addListener(() {
-	+         setState(() {
-	+           // The state that has changed here is the animation object’s value.
-	+         });
-	+       });
-	+     controller.forward();
-	+   }
-	+ 
+import 'package:flutter/material.dart';
+
+void main() => runApp(const LogoApp());
+
+class LogoApp extends StatefulWidget {
+  const LogoApp({Key? key}) : super(key: key);
+
+  @override
+  _LogoAppState createState() => _LogoAppState();
+}
+
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    // #docregion addListener
+    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+      ..addListener(() {
+        // #enddocregion addListener
+        setState(() {
+          // The state that has changed here is the animation object’s value.
+        });
+        // #docregion addListener
+      });
+    // #enddocregion addListener
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        height: animation.value,
+        width: animation.value,
+        child: const FlutterLogo(),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+ 
 ```
+The addListener() function calls setState(), so every time the Animation generates a new number, the current frame is marked dirty, which forces build() to be called again. In build(), the container changes size because its height and width now use animation.value instead of a hardcoded value. Dispose of the controller when the State object is discarded to prevent memory leaks.
+
+With these few changes, you’ve created your first animation in Flutter!
+
+## **Dart language tricks**:
+ You might not be familiar with Dart’s cascade notation—the two dots in ..addListener(). This syntax means that the addListener() method is called with the return value from animate(). Consider the following example:
+ ```
+animation = Tween<double>(begin: 0, end: 300).animate(controller)
+  ..addListener(() {
+    // ···
+  });
+ ```
+
+ This code is equivalent to:
+ ```
+animation = Tween<double>(begin: 0, end: 300).animate(controller);
+animation.addListener(() {
+    // ···
+  });
+ ```
+
+## Simplifying with AnimatedWidget
+
+* How to use the AnimatedWidget helper class (instead of addListener() and setState()) to create a widget that animates.
+* Use AnimatedWidget to create a widget that performs a reusable animation. To separate the transition from the widget, use an AnimatedBuilder, as shown in the Refactoring with AnimatedBuilder section.
+* Examples of AnimatedWidgets in the Flutter API: AnimatedBuilder, AnimatedModalBarrier, DecoratedBoxTransition, FadeTransition, PositionedTransition, RelativePositionedTransition, RotationTransition, ScaleTransition, SizeTransition, SlideTransition.
+
+The AnimatedWidget base class allows you to separate out the core widget code from the animation code. AnimatedWidget doesn’t need to maintain a State object to hold the animation. Add the following AnimatedLogo class:
+
+```
+class AnimatedLogo extends AnimatedWidget {
+  const AnimatedLogo({Key? key, required Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        height: animation.value,
+        width: animation.value,
+        child: const FlutterLogo(),
+      ),
+    );
+  }
+}
+```
+AnimatedLogo uses the current value of the animation when drawing itself.
+
+The LogoApp still manages the AnimationController and the Tween, and it passes the Animation object to AnimatedLogo: (main.dart updated)
+
+```
+import 'package:flutter/material.dart';
+
+void main() => runApp(const LogoApp());
+
+class AnimatedLogo extends AnimatedWidget {
+  const AnimatedLogo({Key? key, required Animation<double> animation})
+      : super(key: key, listenable: animation);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Center(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        height: animation.value,
+        width: animation.value,
+        child: const FlutterLogo(),
+      ),
+    );
+  }
+}
+
+class LogoApp extends StatefulWidget {
+  const LogoApp({Key? key}) : super(key: key);
+
+  @override
+  _LogoAppState createState() => _LogoAppState();
+}
+
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    // #docregion addListener
+    animation = Tween<double>(begin: 0, end: 300).animate(controller);
+    // #enddocregion addListener
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedLogo(animation: animation);
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+
+```
+
