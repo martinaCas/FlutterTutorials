@@ -22,7 +22,7 @@ An optional container for grouping together multiple form field widgets (e.g. Te
 
 Each individual form field should be wrapped in a FormField widget, with the Form widget as a common ancestor of all of those. Call methods on FormState to save, reset, or validate each FormField that is a descendant of this Form. To obtain the FormState, you may use Form.of with a context whose ancestor is the Form, or pass a GlobalKey to the Form constructor and call GlobalKey.currentState.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -122,7 +122,7 @@ The checkbox can optionally display three values - true, false, and null - if tr
 
 Requires one of its ancestors to be a Material widget.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -198,7 +198,7 @@ The type T is the type of the value that each dropdown item represents. All the 
 
 The onChanged callback should update a state variable that defines the dropdown's value. It should also call State.setState to rebuild the dropdown with the new value.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -276,7 +276,7 @@ The static styleFrom method is a convenient way to create a text button ButtonSt
 
 If the onPressed and onLongPress callbacks are null, then this button will be disabled, it will not react to touch.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -374,7 +374,7 @@ If the onPressed callback is null, then the button will be disabled and will not
 
 
 #### This example shows how to display a FloatingActionButton in a Scaffold, with a pink backgroundColor and a thumbs up Icon.
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -418,7 +418,7 @@ class MyStatelessWidget extends StatelessWidget {
 
 #### This example shows how to make an extended FloatingActionButton in a Scaffold, with a pink backgroundColor, a thumbs up Icon and a Text label that reads "Approve".
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -481,7 +481,7 @@ The hit region of an icon button will, if possible, be at least kMinInteractiveD
 
 #### This sample shows an IconButton that uses the Material icon "volume_up" to increase the volume.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -539,12 +539,12 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
 ##### Icon sizes
 When creating an icon button with an Icon, do not override the icon's size with its Icon.size parameter, use the icon button's iconSize parameter instead. For example do this:
-```
+```c++
 IconButton(iconSize: 72, icon: Icon(Icons.favorite), ...)
 
 ```
 Avoid doing this:
-```
+```c++
 IconButton(icon: Icon(Icons.favorite, size: 72), ...)
 
 ```
@@ -557,7 +557,7 @@ It's easy enough to create an icon button with a filled background using the Ink
 
 ##### In this sample the icon button's background color is defined with an Ink widget whose child is an IconButton. The icon button's filled background is a light shade of blue, it's a filled circle, and it's as big as the button is
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -617,7 +617,7 @@ The radio button itself does not maintain any state. Instead, selecting the radi
 
 ### Here is an example of Radio widgets wrapped in ListTiles, which is similar to what you could get with the RadioListTile widget.The currently selected character is passed into groupValue, which is maintained by the example's State. In this case, the first Radio will start off selected because _character is initialized to SingingCharacter.lafayette. If the second radio button is pressed, the example's state is updated with setState, updating _character to SingingCharacter.jefferson. This causes the buttons to rebuild with the updated groupValue, and therefore the selection of the second button. Requires one of its ancestors to be a Material widget.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -704,7 +704,7 @@ The static styleFrom method is a convenient way to create a elevated button Butt
 
 If onPressed and onLongPress callbacks are null, then the button will be disabled.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -770,7 +770,7 @@ A Material Design slider.
 
 Used to select from a range of values.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -879,7 +879,7 @@ Remember to call TextEditingController.dispose of the TextEditingController when
 
 ### This example shows how to create a TextField that will obscure input. The InputDecoration surrounds the field in a border using OutlineInputBorder and adds a label.
 
-```
+```c++
 const TextField(
   obscureText: true,
   decoration: InputDecoration(
@@ -893,7 +893,7 @@ const TextField(
 
 A common way to read a value from a TextField is to use the onSubmitted callback. This callback is applied to the text field's current value when the user finishes editing.
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
