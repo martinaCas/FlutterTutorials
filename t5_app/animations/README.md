@@ -446,5 +446,303 @@ class GrowTransition extends StatelessWidget {
 Finally, the code to initialize the animation looks very similar to the animate2 example. The initState() method creates an AnimationController and a Tween, then binds them with animate(). The magic happens in the build() method, which returns a GrowTransition object with a LogoWidget as a child, and an animation object to drive the transition. These are the three elements listed in the bullet points above.
 
 ```c++
+//FINAL MAIN.DART
+import 'package:flutter/material.dart';
+
+void main() => runApp(const LogoApp());
+
+// #docregion LogoWidget
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({super.key});
+
+  // Leave out the height and width so it fills the animating parent
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: const FlutterLogo(),
+    );
+  }
+}
+// #enddocregion LogoWidget
+
+// #docregion GrowTransition
+class GrowTransition extends StatelessWidget {
+  const GrowTransition({required this.child, required this.animation, super.key});
+
+  final Widget child;
+  final Animation<double> animation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          return SizedBox(
+            height: animation.value,
+            width: animation.value,
+            child: child,
+          );
+        },
+        child: child,
+      ),
+    );
+  }
+}
+// #enddocregion GrowTransition
+
+class LogoApp extends StatefulWidget {
+  const LogoApp({super.key});
+
+  @override
+  _LogoAppState createState() => _LogoAppState();
+}
+
+// #docregion print-state
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    animation = Tween<double>(begin: 0, end: 300).animate(controller);
+    controller.forward();
+  }
+  // #enddocregion print-state
+
+  @override
+  Widget build(BuildContext context) {
+    return GrowTransition(
+      child: const LogoWidget(),
+      animation: animation,
+    );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+  // #docregion print-state
+}
+```
+
+## Simultaneous animations
+
+* The Curves class defines an array of commonly used curves that you can use with a CurvedAnimation.
+
+In this section, you’ll build on the example from monitoring the progress of the animation (animate3), which used AnimatedWidget to animate in and out continuously. Consider the case where you want to animate in and out while the opacity animates from transparent to opaque.
+
+#### This example shows how to use multiple tweens on the same animation controller, where each tween manages a different effect in the animation. It is for illustrative purposes only. If you were tweening opacity and size in production code, you’d probably use FadeTransition and SizeTransition instead.
+
+Each tween manages an aspect of the animation. For example:
+
+```c++
+controller =
+    AnimationController(duration: const Duration(seconds: 2), vsync: this);
+sizeAnimation = Tween<double>(begin: 0, end: 300).animate(controller);
+opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
+
+```
+
+You can get the size with sizeAnimation.value and the opacity with opacityAnimation.value, but the constructor for AnimatedWidget only takes a single Animation object. To solve this problem, the example creates its own Tween objects and explicitly calculates the values.
+
+Change AnimatedLogo to encapsulate its own Tween objects, and its build() method calls Tween.evaluate() on the parent’s animation object to calculate the required size and opacity values. The following code shows the changes with highlights:
+
+```c++
+class AnimatedLogo extends AnimatedWidget {
+  const AnimatedLogo({super.key, required Animation<double> animation})
+      : super(listenable: animation);
+
+  // Make the Tweens static because they don't change.
+  /**/static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
+  /**/static final _sizeTween = Tween<double>(begin: 0, end: 300);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Center(
+     /**/ child: Opacity(
+      /**/  opacity: _opacityTween.evaluate(animation),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+         /**/ height: _sizeTween.evaluate(animation),
+         /**/ width: _sizeTween.evaluate(animation),
+          child: const FlutterLogo(),
+        ),
+      ),
+    );
+  }
+}
+
+class LogoApp extends StatefulWidget {
+  const LogoApp({super.key});
+
+  @override
+  _LogoAppState createState() => _LogoAppState();
+}
+
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+   /**/ animation = CurvedAnimation(parent: controller, curve: Curves.easeIn)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      });
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedLogo(animation: animation);
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+```
+Final code:
+```c++
+// #docregion ShakeCurve
+import 'dart:math';
+
+// #enddocregion ShakeCurve
+import 'package:flutter/material.dart';
+
+void main() => runApp(const LogoApp());
+
+// #docregion diff
+class AnimatedLogo extends AnimatedWidget {
+  const AnimatedLogo({super.key, required Animation<double> animation})
+      : super(listenable: animation);
+
+  // Make the Tweens static because they don't change.
+  static final _opacityTween = Tween<double>(begin: 0.1, end: 1);
+  static final _sizeTween = Tween<double>(begin: 0, end: 300);
+
+  @override
+  Widget build(BuildContext context) {
+    final animation = listenable as Animation<double>;
+    return Center(
+      child: Opacity(
+        opacity: _opacityTween.evaluate(animation),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          height: _sizeTween.evaluate(animation),
+          width: _sizeTween.evaluate(animation),
+          child: const FlutterLogo(),
+        ),
+      ),
+    );
+  }
+}
+
+class LogoApp extends StatefulWidget {
+  const LogoApp({super.key});
+
+  @override
+  _LogoAppState createState() => _LogoAppState();
+}
+
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    // #docregion AnimationController, tweens
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    // #enddocregion AnimationController, tweens
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          controller.forward();
+        }
+      });
+    controller.forward();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedLogo(animation: animation);
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+}
+// #enddocregion diff
+
+// Extra code used only in the tutorial explanations. It is not used by the app.
+
+class UsedInTutorialTextOnly extends _LogoAppState {
+  UsedInTutorialTextOnly() {
+    // ignore: unused_local_variable, prefer_typing_uninitialized_variables
+    var animation, sizeAnimation, opacityAnimation, tween, colorTween;
+
+    // #docregion CurvedAnimation
+    animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
+    // #enddocregion CurvedAnimation
+
+    // #docregion tweens
+    sizeAnimation = Tween<double>(begin: 0, end: 300).animate(controller);
+    opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
+    // #enddocregion tweens
+
+    // #docregion tween
+    tween = Tween<double>(begin: -200, end: 0);
+    // #enddocregion tween
+
+    // #docregion colorTween
+    colorTween = ColorTween(begin: Colors.transparent, end: Colors.black54);
+    // #enddocregion colorTween
+  }
+
+  usedInTutorialOnly1() {
+    // #docregion IntTween
+    AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    Animation<int> alpha = IntTween(begin: 0, end: 255).animate(controller);
+    // #enddocregion IntTween
+    return alpha;
+  }
+
+  usedInTutorialOnly2() {
+    // #docregion IntTween-curve
+    AnimationController controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    final Animation<double> curve =
+        CurvedAnimation(parent: controller, curve: Curves.easeOut);
+    Animation<int> alpha = IntTween(begin: 0, end: 255).animate(curve);
+    // #enddocregion IntTween-curve
+    return alpha;
+  }
+}
+
+// #docregion ShakeCurve
+class ShakeCurve extends Curve {
+  @override
+  double transform(double t) => sin(t * pi * 2);
+}
+
 
 ```
