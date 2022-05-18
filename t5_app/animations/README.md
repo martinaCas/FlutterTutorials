@@ -48,12 +48,12 @@ An Animation object knows nothing about rendering or build() functions.
 
 A CurvedAnimation defines the animation’s progress as a non-linear curve.
 
-```
+```c++
 animation = CurvedAnimation(parent: controller, curve: Curves.easeIn);
 ```
 
 #### Note: The Curves class defines many commonly used curves, or you can create your own. For example:
-```
+```c++
 import 'dart:math';
 
 class ShakeCurve extends Curve {
@@ -69,7 +69,7 @@ CurvedAnimation and AnimationController (described in the next section) are both
 ## Animation Controller
 
 AnimationController is a special Animation object that generates a new value whenever the hardware is ready for a new frame. By default, an AnimationController linearly produces the numbers from 0.0 to 1.0 during a given duration. For example, this code creates an Animation object, but does not start it running:
-```
+```c++
 controller =
     AnimationController(duration: const Duration(seconds: 2), vsync: this);
 ```
@@ -86,14 +86,14 @@ When creating an AnimationController, you pass it a vsync argument. The presence
 ## Tween
 
 By default, the AnimationController object ranges from 0.0 to 1.0. If you need a different range or a different data type, you can use a Tween to configure an animation to interpolate to a different range or data type. For example, the following Tween goes from -200.0 to 0.0:
-```
+```c++
 tween = Tween<double>(begin: -200, end: 0);
 ```
 
 A Tween is a stateless object that takes only begin and end. The sole job of a Tween is to define a mapping from an input range to an output range. The input range is commonly 0.0 to 1.0, but that’s not a requirement.
 
 A Tween inherits from Animatable<T>, not from Animation<T>. An Animatable, like Animation, doesn’t have to output double. For example, ColorTween specifies a progression between two colors.
-```
+```c++
 colorTween = ColorTween(begin: Colors.transparent, end: Colors.black54);
 ```
 
@@ -103,7 +103,7 @@ A Tween object does not store any state. Instead, it provides the evaluate(Anima
 
 To use a Tween object, call animate() on the Tween, passing in the controller object. For example, the following code generates the integer values from 0 to 255 over the course of 500 ms.
 
-```
+```c++
 AnimationController controller = AnimationController(
     duration: const Duration(milliseconds: 500), vsync: this);
 Animation<int> alpha = IntTween(begin: 0, end: 255).animate(controller);
@@ -112,7 +112,7 @@ Animation<int> alpha = IntTween(begin: 0, end: 255).animate(controller);
 
 The following example shows a controller, a curve, and a Tween:
 
-```
+```c++
 AnimationController controller = AnimationController(
     duration: const Duration(milliseconds: 500), vsync: this);
 final Animation<double> curve =
@@ -137,7 +137,7 @@ So far you’ve learned how to generate a sequence of numbers over time. Nothing
 
 Consider the following app that draws the Flutter logo without animation:
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const LogoApp());
@@ -168,7 +168,7 @@ The following shows the same code modified to animate the logo to grow from noth
 
 The changes from the non-animated example are highlighted: (main.dart updated)
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const LogoApp());
@@ -228,7 +228,7 @@ With these few changes, you’ve created your first animation in Flutter!
 
 ## **Dart language tricks**:
  You might not be familiar with Dart’s cascade notation—the two dots in ..addListener(). This syntax means that the addListener() method is called with the return value from animate(). Consider the following example:
- ```
+ ```c++
 animation = Tween<double>(begin: 0, end: 300).animate(controller)
   ..addListener(() {
     // ···
@@ -236,7 +236,7 @@ animation = Tween<double>(begin: 0, end: 300).animate(controller)
  ```
 
  This code is equivalent to:
- ```
+ ```c++
 animation = Tween<double>(begin: 0, end: 300).animate(controller);
 animation.addListener(() {
     // ···
@@ -251,7 +251,7 @@ animation.addListener(() {
 
 The AnimatedWidget base class allows you to separate out the core widget code from the animation code. AnimatedWidget doesn’t need to maintain a State object to hold the animation. Add the following AnimatedLogo class:
 
-```
+```c++
 class AnimatedLogo extends AnimatedWidget {
   const AnimatedLogo({Key? key, required Animation<double> animation})
       : super(key: key, listenable: animation);
@@ -274,7 +274,7 @@ AnimatedLogo uses the current value of the animation when drawing itself.
 
 The LogoApp still manages the AnimationController and the Tween, and it passes the Animation object to AnimatedLogo: (main.dart updated)
 
-```
+```c++
 import 'package:flutter/material.dart';
 
 void main() => runApp(const LogoApp());
@@ -331,3 +331,120 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
 
 ```
 
+## Monitoring the profress of the animation
+
+* Use addStatusListener() for notifications of changes to the animation’s state, such as starting, stopping, or reversing direction.
+* Run an animation in an infinite loop by reversing direction when the animation has either completed or returned to its starting state.
+
+It’s often helpful to know when an animation changes state, such as finishing, moving forward, or reversing. You can get notifications for this with addStatusListener(). The following code modifies the previous example so that it listens for a state change and prints an update. The highlighted line shows the change:
+
+```c++
+class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
+  late Animation<double> animation;
+  late AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    animation = Tween<double>(begin: 0, end: 300).animate(controller)
+      ..addStatusListener((status) => print ('$status')); //THIS IS THE HIGHLIGHTED
+    controller.forward();
+  }
+  // ...
+}
+```
+
+Running this code produces this output in console:
+```
+flutter: AnimationStatus.forward
+flutter: AnimationStatus.completed
+```
+
+Next, use addStatusListener() to reverse the animation at the beginning or the end. This creates a “breathing” effect:
+
+```c++
+    AnimationController(duration: const Duration(seconds: 2), vsync: this);
+     animation = Tween<double>(begin: 0, end: 300).animate(controller);//remove
+     animation = Tween<double>(begin: 0, end: 300).animate(controller)//add to end
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+           controller.reverse();
+         } else if (status == AnimationStatus.dismissed) {
+	           controller.forward();
+	         }
+	       })
+	       ..addStatusListener((status) => print('$status'));
+	      controller.forward();
+```
+
+## Refactoring with AnimateBuilder
+* An AnimatedBuilder understands how to render the transition.
+* An AnimatedBuilder doesn’t know how to render the widget, nor does it manage the Animation object.
+* Use AnimatedBuilder to describe an animation as part of a build method for another widget. If you simply want to define a widget with a reusable animation, use an AnimatedWidget, as shown in the Simplifying with AnimatedWidget section.
+* Examples of AnimatedBuilders in the Flutter API: BottomSheet, ExpansionTile, PopupMenu, ProgressIndicator, RefreshIndicator, Scaffold, SnackBar, TabBar, TextField.
+
+One problem with the code in the [animate3](https://github.com/flutter/website/tree/main/examples/animation/animate3) example, is that changing the animation required changing the widget that renders the logo. A better solution is to separate responsibilities into different classes:
+
+* Render the logo
+* Define the Animation object
+* Render the transition
+You can accomplish this separation with the help of the AnimatedBuilder class. An AnimatedBuilder is a separate class in the render tree. Like AnimatedWidget, AnimatedBuilder automatically listens to notifications from the Animation object, and marks the widget tree dirty as necessary, so you don’t need to call addListener().
+
+The widget tree for the [animate4](https://github.com/flutter/website/tree/main/examples/animation/animate4) example looks like this:
+
+![Image](https://docs.flutter.dev/assets/images/docs/ui/AnimatedBuilder-WidgetTree.png)
+
+Starting from the bottom of the widget tree, the code for rendering the logo is straightforward:
+
+```c++
+class LogoWidget extends StatelessWidget {
+  const LogoWidget({super.key});
+
+  // Leave out the height and width so it fills the animating parent
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: const FlutterLogo(),
+    );
+  }
+}
+```
+
+The middle three blocks in the diagram are all created in the build() method in GrowTransition, shown below. The GrowTransition widget itself is stateless and holds the set of final variables necessary to define the transition animation. The build() function creates and returns the AnimatedBuilder, which takes the (Anonymous builder) method and the LogoWidget object as parameters. The work of rendering the transition actually happens in the (Anonymous builder) method, which creates a Container of the appropriate size to force the LogoWidget to shrink to fit.
+
+One tricky point in the code below is that the child looks like it’s specified twice. What’s happening is that the outer reference of child is passed to AnimatedBuilder, which passes it to the anonymous closure, which then uses that object as its child. The net result is that the AnimatedBuilder is inserted in between the two widgets in the render tree.
+
+```c++
+class GrowTransition extends StatelessWidget {
+  const GrowTransition({required this.child, required this.animation, super.key});
+
+  final Widget child;
+  final Animation<double> animation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          return SizedBox(
+            height: animation.value,
+            width: animation.value,
+            child: child,
+          );
+        },
+        child: child,
+      ),
+    );
+  }
+}
+```
+
+Finally, the code to initialize the animation looks very similar to the animate2 example. The initState() method creates an AnimationController and a Tween, then binds them with animate(). The magic happens in the build() method, which returns a GrowTransition object with a LogoWidget as a child, and an animation object to drive the transition. These are the three elements listed in the bullet points above.
+
+```c++
+
+```
