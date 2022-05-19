@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter/rendering.dart' show debugPaintSizeEnabled;
 
 void main() {
   debugPaintSizeEnabled = false; //set true for visual layout
@@ -136,12 +136,16 @@ class MyApp extends StatelessWidget {
           margin: const EdgeInsets.fromLTRB(0, 40, 0, 30),
           height: 600,
           child: Card(
-            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(
-                width: 440,
-                child: leftColumn,
-              )
-            ]),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 440,
+                  child: leftColumn,
+                ),
+                mainImage,
+              ],
+            ),
           ),
         ),
       ),
