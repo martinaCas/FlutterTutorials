@@ -135,5 +135,7 @@ class MyApp extends StatelessWidget {
 
 Per default una Non-Material App non include un AppBar, titolo o colore di sfondo. Se vuoi avere queste features in un'app Non-Material, devi costruirtele da te. Quest'app cambia il colore di sfondo in bianco e il testo in grigio imitando una Material app.
 
+Puoi vedere il codice [qui](https://github.com/martinaCas/FlutterTutorials/blob/main/t0_app/layouts_flutter/lib/main.dart) per Material App e [qui](https://github.com/martinaCas/FlutterTutorials/blob/main/t0_app/non_material_app/lib/main.dart) per Non Material App.
+
 
 
