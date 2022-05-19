@@ -57,7 +57,7 @@ Once you have a connected and enabled device, or you’ve launched the iOS simul
 **Step 2: Subclass StatefulWidget**
 
 The FavoriteWidget class manages its own state, so it overrides createState() to create a State object. The framework calls createState() when it wants to build the widget. In this example, createState() returns an instance of _FavoriteWidgetState, which you’ll implement in the next step.
-```
+```c++
 class FavoriteWidget extends StatefulWidget {
   const FavoriteWidget({Key? key}) : super(key: key);
 
@@ -70,7 +70,7 @@ class FavoriteWidget extends StatefulWidget {
 **Step 3: Subclass State**
 
 The _FavoriteWidgetState class stores the mutable data that can change over the lifetime of the widget. When the app first launches, the UI displays a solid red star, indicating that the lake has “favorite” status, along with 41 likes. These values are stored in the _isFavorited and _favoriteCount fields:
-```
+```c++
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   bool _isFavorited = true;
   int _favoriteCount = 41;
@@ -81,7 +81,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
 
 The class also defines a build() method, which creates a row containing a red IconButton, and Text. You use IconButton (instead of Icon) because it has an onPressed property that defines the callback function (_toggleFavorite) for handling a tap. You’ll define the callback function next.
 
-```
+```c++
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   // ···
   @override
@@ -120,7 +120,7 @@ The _toggleFavorite() method, which is called when the IconButton is pressed, ca
 * A star icon and the number 41
 * A star_border icon and the number 40
 
-```
+```c++
 void _toggleFavorite() {
   setState(() {
     if (_isFavorited) {
@@ -138,7 +138,7 @@ void _toggleFavorite() {
 
 Add your custom stateful widget to the widget tree in the app’s build() method. First, locate the code that creates the Icon and Text, and delete it. In the same location, create the stateful widget:
 
-```
+```c++
 - Icon(
     Icons.star,
     color: Colors.red[500],
